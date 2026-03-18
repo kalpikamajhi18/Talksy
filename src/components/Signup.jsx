@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const Signup = () => {
    const[signup,setSignup]=useState({
@@ -14,7 +15,7 @@ const Signup = () => {
     }
 
     let handlesignup = async()=>{
-      alert("Ready to Implement")
+      toast.success("Ready to Implement")
     }
   return (
    
