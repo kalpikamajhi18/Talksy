@@ -1,152 +1,159 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { FaUserAlt, FaEnvelope, FaPhone, FaLock } from "react-icons/fa";
 
 const Signup = () => {
-   const[signup,setSignup]=useState({
-      uname :" ",
-      uemail :" ",
-      umobile :" ",
-      pass :" ",
-      cpass :" "
-    })
-    let handleChange=(event)=>{
-       setSignup({...signup, [event.target.name] : event.target.value})
-    }
 
-    let handlesignup = async()=>{
-      
-      let newdata = {
-             "name":signup.uname, 
-              "email":signup.uemail, 
-               "password":signup.pass,
-                "phone":signup.umobile   
-      }
-      let url = "https://api.skillsvarz.com/api/users"
+let redirect = useNavigate()
 
-      let resp = await fetch(url,{        
-        method:"POST",
-        headers:{
-          'Content-Type':'application/json'
-        },
-        body:JSON.stringify(newdata)
-      })
-      console.log(resp)
-      let res = await resp.json()
-      console.log(res)
+const [signup, setSignup] = useState({
+  uname: "",
+  uemail: "",
+  umobile: "",
+  pass: "",
+  cpass: ""
+})
 
-      if(resp.status===200 || resp.status===201)
-       {
-         toast.success("Registration successfull")
+let handleChange = (e) => {
+  setSignup({ ...signup, [e.target.name]: e.target.value })
+}
 
-       }   
-       else
-         {  toast.error("Try again")}
-      
-    }
-  return (
-   
-   <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-900 to-gray-800">
-      
-      {/* Card */}
-      <div className="bg-gray-900 text-white p-8 rounded-2xl shadow-2xl w-[380px]">
-        
-        {/* Heading */}
-        <h2 className="text-2xl font-bold text-center mb-6">Create Account</h2>
+let handlesignup = async () => {
+
+  if(signup.pass !== signup.cpass){
+    return toast.error("Passwords do not match")
+  }
+
+  let newdata = {
+    name: signup.uname,
+    email: signup.uemail,
+    password: signup.pass,
+    phone: signup.umobile
+  }
+
+  let resp = await fetch("https://api.skillsvarz.com/api/users", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(newdata)
+  })
+
+  let res = await resp.json()
+
+  if(resp.status === 200 || resp.status === 201){
+    toast.success("Registration successful")
+    setTimeout(()=>{
+      redirect("/user")
+    },1000)
+  } else {
+    toast.error("Try again")
+  }
+}
+
+return (
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#dac0c9] to-[#dbabbd]">
+
+    {/* Main Card */}
+    <div className="w-[800px] h-[500px] bg-white rounded-3xl shadow-2xl flex overflow-hidden">
+
+      {/* LEFT SIDE */}
+      <div className="w-1/2 bg-gradient-to-br from-[#5E2D3F] to-[#a15c74] flex flex-col justify-center items-center text-white relative">
+
+        <h2 className="text-3xl font-bold mb-2">Join Us</h2>
+        <p className="text-sm opacity-80">Create your account to get started</p>
+
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-white opacity-10 rounded-t-full"></div>
+      </div>
+
+      {/* RIGHT SIDE */}
+      <div className="w-1/2 flex flex-col justify-center px-10">
+
+        <h2 className="text-2xl font-bold text-[#5E2D3F] mb-5 text-center">
+          Sign Up
+        </h2>
 
         {/* Name */}
-        <div className="mb-3">
-          <label htmlFor="uname" className="text-sm text-gray-400">
-            Your Name
-          </label>
+        <div className="mb-3 flex items-center border-b border-gray-300">
+          <FaUserAlt className="text-[#5E2D3F] mr-2" />
           <input
-            onChange={handleChange}
             name="uname"
             type="text"
-            id="uname"
-            placeholder="Enter your name"
-            className="w-full mt-1 p-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Full Name"
+            className="w-full p-2 focus:outline-none"
+            onChange={handleChange}
           />
         </div>
 
         {/* Email */}
-        <div className="mb-3">
-          <label htmlFor="uemail" className="text-sm text-gray-400">
-            Your Email
-          </label>
+        <div className="mb-3 flex items-center border-b border-gray-300">
+          <FaEnvelope className="text-[#5E2D3F] mr-2" />
           <input
-            onChange={handleChange}
             name="uemail"
             type="email"
-            id="uemail"
-            placeholder="Enter your email"
-            className="w-full mt-1 p-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Email"
+            className="w-full p-2 focus:outline-none"
+            onChange={handleChange}
           />
         </div>
 
         {/* Phone */}
-        <div className="mb-3">
-          <label htmlFor="umobile" className="text-sm text-gray-400">
-            Phone Number
-          </label>
+        <div className="mb-3 flex items-center border-b border-gray-300">
+          <FaPhone className="text-[#5E2D3F] mr-2" />
           <input
-            onChange={handleChange}
             name="umobile"
             type="number"
-            id="umobile"
-            placeholder="Enter your phone number"
-            className="w-full mt-1 p-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Phone Number"
+            className="w-full p-2 focus:outline-none"
+            onChange={handleChange}
           />
         </div>
 
         {/* Password */}
-        <div className="mb-3">
-          <label htmlFor="pass" className="text-sm text-gray-400">
-            Password
-          </label>
+        <div className="mb-3 flex items-center border-b border-gray-300">
+          <FaLock className="text-[#5E2D3F] mr-2" />
           <input
-            onChange={handleChange}
             name="pass"
             type="password"
-            id="pass"
-            placeholder="Enter your password"
-            className="w-full mt-1 p-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Password"
+            className="w-full p-2 focus:outline-none"
+            onChange={handleChange}
           />
         </div>
 
         {/* Confirm Password */}
-        <div className="mb-4">
-          <label htmlFor="cpass" className="text-sm text-gray-400">
-            Confirm Password
-          </label>
+        <div className="mb-3 flex items-center border-b border-gray-300">
+          <FaLock className="text-[#5E2D3F] mr-2" />
           <input
-            onChange={handleChange}
             name="cpass"
             type="password"
-            id="cpass"
-            placeholder="Confirm your password"
-            className="w-full mt-1 p-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Confirm Password"
+            className="w-full p-2 focus:outline-none"
+            onChange={handleChange}
           />
         </div>
 
         {/* Button */}
         <button
           onClick={handlesignup}
-          className="w-full bg-blue-600 hover:bg-blue-700 transition-all duration-300 py-2 rounded-lg font-semibold"
+          className="w-full bg-[#5E2D3F] hover:bg-[#4a2332] text-white py-2 rounded-full transition-all duration-300 shadow-md mt-3"
         >
-          Register Now
+          REGISTER
         </button>
 
         {/* Login Link */}
-        <p className="text-center text-sm text-gray-400 mt-4">
+        <p className="text-center text-sm text-gray-500 mt-4">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline">
-            Login Now
+          <Link to="/login" className="text-[#5E2D3F] font-medium hover:underline">
+            Login
           </Link>
         </p>
+
       </div>
     </div>
-  )
+  </div>
+)
 }
 
 export default Signup

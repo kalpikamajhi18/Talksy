@@ -6,9 +6,8 @@ const UserDashboard = () => {
     const { user } = useOutletContext()
 
     return (
-        <div>
-            hey  {user.name} <br />
-            email {user.email}
+        <div className='h-screen w-full overflow-hidden '>
+        <img className='object-cover  w-full' src="/talksy.png" alt="" />
         </div>
     )
 }

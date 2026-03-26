@@ -7,6 +7,7 @@ import UserDashboard from "./components/UserDashboard";
 import Chatscreen from "./components/Chatscreen";
 import Profile from "./Pages/Profile";
 import Resetpassword from "./Pages/Resetpassword";
+import ForgetPassword from "./Pages/ForgetPassword";
 
 const router = createBrowserRouter([
     {
@@ -16,7 +17,8 @@ const router = createBrowserRouter([
         children:[
             {index:true, element:<Login/>},
              {path:"login", element:<Login/>},
-              {path:"signup", element:<Signup/>}
+              {path:"signup", element:<Signup/>},
+              {path:"forget-password", element:<ForgetPassword/>}
         ]
     },
     

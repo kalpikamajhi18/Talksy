@@ -40,14 +40,33 @@ const Resetpassword = () => {
     }
   }
 
-  return (
-    <div className="h-full w-full flex items-center justify-center bg-[#020617] text-white">
+  const deleteAccount = async () => {
+    let conf = confirm("Are you sure you want to delete?")
+    if (conf) {
+      let resp = await fetch("https://api.skillsvarz.com/api/user/" + user._id, {
+        method: 'DELETE',
+      })
 
-      <div className="w-full max-w-md bg-[#0f172a] p-6 rounded-2xl shadow-lg border border-[#1e293b]">
+      let res = await resp.json()
+
+      if (resp.status === 200 || resp.status === 201) {
+        toast.success(res?.message || "Account Deleted")
+        setTimeout(() => {
+          navigate('/login')
+        }, 500)
+      }
+      else toast.error(res?.error || "Try Again")
+    }
+  }
+
+  return (
+    <div className="h-full w-full bg-[#f8f5f6] flex items-center justify-center p-6">
+
+      <div className="w-full max-w-md bg-white p-6 rounded-2xl shadow-sm border border-[#eadde1]">
 
         {/* Heading */}
-        <h2 className="text-2xl font-semibold text-center mb-6">
-          Reset Password 🔒
+        <h2 className="text-2xl font-semibold text-center mb-6 text-[#5E2D3F]">
+          Reset Password
         </h2>
 
         {/* Form */}
@@ -55,40 +74,47 @@ const Resetpassword = () => {
 
           {/* Password */}
           <div>
-            <label className="text-sm text-gray-400">New Password</label>
+            <label className="text-sm text-[#a78b94]">New Password</label>
             <input
               onChange={handlepass}
               type="password"
               name="password"
               placeholder="Enter new password"
-              className="w-full mt-1 px-4 py-2 rounded-lg bg-[#1e293b] border border-[#334155] focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-1 px-4 py-2 rounded-lg bg-[#fdfafb] border border-[#eadde1] focus:outline-none focus:ring-2 focus:ring-[#5E2D3F]"
             />
           </div>
 
           {/* Confirm Password */}
           <div>
-            <label className="text-sm text-gray-400">Confirm Password</label>
+            <label className="text-sm text-[#a78b94]">Confirm Password</label>
             <input
               onChange={handlepass}
               type="password"
               name="cpassword"
               placeholder="Confirm password"
-              className="w-full mt-1 px-4 py-2 rounded-lg bg-[#1e293b] border border-[#334155] focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-1 px-4 py-2 rounded-lg bg-[#fdfafb] border border-[#eadde1] focus:outline-none focus:ring-2 focus:ring-[#5E2D3F]"
             />
           </div>
 
-          {/* Button */}
+          {/* Change Password */}
           <button
             onClick={changepassword}
-            className="mt-4 bg-blue-600 hover:bg-blue-700 py-2 rounded-lg transition-all"
+            className="mt-3 bg-[#5E2D3F] hover:opacity-90 text-white py-2 rounded-lg transition"
           >
             Change Password
+          </button>
+
+          {/* Delete Account */}
+          <button
+            onClick={deleteAccount}
+            className="mt-2 bg-[#f3e7eb] hover:bg-[#eadde1] text-[#5E2D3F] py-2 rounded-lg transition"
+          >
+            Delete Account
           </button>
 
         </div>
 
       </div>
-
     </div>
   )
 }
