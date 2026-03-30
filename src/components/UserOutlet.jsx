@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
+import { Bounce, ToastContainer } from 'react-toastify'
 
 const UserOutlet = () => {
     let user_id = JSON.parse(localStorage.getItem("user_id"))
@@ -19,8 +20,21 @@ const UserOutlet = () => {
     }, [user_id])
     return (
         <div className='h-screen w-full flex'>
-            <Sidebar user = {user} />
+            <Sidebar user={user} />
             <Outlet context={{ user }} />
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+            />
         </div>
     )
 }

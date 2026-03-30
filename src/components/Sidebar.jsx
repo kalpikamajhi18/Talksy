@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Recentchatbox from './Recentchatbox'
 import { FiSettings } from "react-icons/fi";
 import { LogOutIcon, MessageCircleCheck, Settings, User2Icon } from 'lucide-react';
@@ -8,9 +8,12 @@ const Sidebar = ({ user }) => {
   const navigate = useNavigate()
   const [isenable, setIsenable] = useState(true)
   const [search, setSearch] = useState([])
+  const [chats, setChats] = useState([])
+  const [inputSearch, setInputSearch] = useState("")
 
   // 🔍 Search API
   const searchData = async (event) => {
+    setInputSearch(event.target.value)
     let url = "https://api.skillsvarz.com/api/user/search?query="
     let resp = await fetch(url + event.target.value)
     let res = await resp.json()
@@ -22,9 +25,43 @@ const Sidebar = ({ user }) => {
     }
   }
 
+  useEffect(() => {
+    let user_token = JSON.parse(localStorage.getItem('user_token'))
+    let url = "https://api.skillsvarz.com/api/chats"
+    let fetchapi = async () => {
+      let resp = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${user_token}`
+        }
+      })
+      let res = await resp.json()
+      setChats(res)
+
+    }
+    fetchapi()
+  }, [])
+
+  let newchat = async (userId) => {
+    let user_token = JSON.parse(localStorage.getItem('user_token'))
+    let url = "https://api.skillsvarz.com/api/chats"
+    let resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_token}`
+      },
+      body: JSON.stringify({ userId: userId })
+
+    })
+    let res = await resp.json()
+    console.log(res)
+  }
+
   return (
     <>
       {isenable ? (
+
 
         // ================= CHAT VIEW =================
         <div className="h-screen w-[20%] min-w-[260px] bg-[#5E2D3F] text-white flex flex-col justify-between">
@@ -36,25 +73,44 @@ const Sidebar = ({ user }) => {
             <div className="mb-4">
               <input
                 type="search"
+                value={inputSearch}
+                
                 placeholder="Search chats..."
-                onChange={searchData}
+                onChange={(event)=>{searchData(event)}}
                 className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white"
               />
             </div>
 
             {/* Recent Chats */}
-            <h2 className="text-gray-300 text-sm px-2 mb-2">Recent Chats</h2>
+
+            {/* <h2 className="text-gray-300 text-sm px-2 mb-2">Recent Chats</h2> */}
 
             <div className="space-y-2 overflow-y-auto max-h-[70vh] pr-1">
 
               {/* 🔁 Dynamic search results (optional) */}
-              {search.length > 0 ? (
-                search.map((item, index) => (
-                  <Recentchatbox key={index} name={item.name} email={item.email}/>
+              {inputSearch ? <>
+                <h2 className="text-gray-400 text-sm px-2 mb-2">Search results...</h2>
+                {search.length>0? search.map((item, index) => (
+                <Recentchatbox key={index} name={item.name} email={item.email} id={item._id} newchat={newchat} />
                 ))
-              ) : (
+               : (
                 <span>No Recent Chats..</span>
-              )}
+              )}</>    :
+              (
+                <>
+                <h2 className="text-gray-400 text-sm px-2 mb-2">Recent Chats...</h2>
+                {chats.length===0? <></> :
+                chats.map((val,index)=>{
+                      let newuser = val.users.find((u)=>{
+                        return u._id!==user._id
+
+                      })
+                      return <Recentchatbox key={index} name={newuser.name} email={newuser.email} />
+                })
+                }
+                </>
+              )
+              }
 
             </div>
           </div>

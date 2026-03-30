@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { FaUserAlt, FaLock } from "react-icons/fa";
+import { FaUserAlt, FaLock } from "react-icons/fa"; 
 
 const Login = () => {
 
@@ -18,7 +18,6 @@ let handlelogin = async () => {
     email: login.username,
     password: login.password
   }
-
   let resp = await fetch("https://api.skillsvarz.com/api/login", {
     method: "POST",
     headers: {
@@ -30,7 +29,11 @@ let handlelogin = async () => {
   let res = await resp.json()
 
   if(resp.status === 200 || resp.status === 201) { 
+    // console.log(res)
     localStorage.setItem("user_id", JSON.stringify(res.user._id))
+    localStorage.setItem("user_token", JSON.stringify(res.token))
+    // let user_token = JSON.parse(localStorage.getItem('user_token'))
+   
     toast.success(res.message)
     setTimeout(()=>{
       redirect("/user")

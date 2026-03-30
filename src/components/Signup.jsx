@@ -45,7 +45,7 @@ let handlesignup = async () => {
   if(resp.status === 200 || resp.status === 201){
     toast.success("Registration successful")
     setTimeout(()=>{
-      redirect("/user")
+      redirect("/login")
     },1000)
   } else {
     toast.error("Try again")
